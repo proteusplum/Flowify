@@ -170,9 +170,8 @@ import urllib
 import string
 import sys
 import difflib
-if len(sys.argv) != 4:
- sys.exit("this script requires four arguments: mflow username, password, name of new playlist and file containing 
-spotify uris")
+if len(sys.argv) != 5:
+ sys.exit("this script requires four arguments: mflow username, password, name of new playlist and file containing spotify uris")
 login=mflowlogin(sys.argv[1],sys.argv[2])
 userid=login[0]
 sessionid=login[1]
@@ -182,15 +181,15 @@ try:
 except: 
  sys.exit("failed to open file!")
 uris=string.split(f.read())
-counter=1
+counter=0
 part=2
 for uri in uris:
  result=spotifylookup(uri)
  flow=mflowlookup(result,sessionid,userid)
  if flow["flowurn"]!="":
-	if counter==49:
-		playlist=mflowplaylist(userid,sessionid,sys.argv[3]+ "pt."+str(part))
-		counter=1
+	if counter==50:
+		playlist=mflowplaylist(userid,sessionid,sys.argv[3]+ " pt."+str(part))
+		counter=0
 		part=part+1
  	if playlistadd(userid,sessionid,flow,playlist, result):
  		counter=counter+1
