@@ -13,3 +13,9 @@ playlist beyond which they are deemed "full", so any workround will have to be a
 
 If you're not already an mFlow user, sign up by the following link to earn yourself and the script author £1 
 credit to purchase music http://beta.mflow.com/signup?invitecode=8GNXIH. 
+
+PLEASE NOTE
+
+Only songs which have been flowed can be added to a user playlist.  The script will flow the song using your 
+account if it can't already find a flow of that song.  So please don't use the script if you have an issue with 
+that. 
