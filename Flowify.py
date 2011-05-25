@@ -1,3 +1,4 @@
+#! /usr/bin/env python2
 def spotifylookup(uri):
 	URL=u"http://ws.spotify.com/lookup/1/.json?uri="+uri
 	result=simplejson.load(urllib.urlopen(URL))
