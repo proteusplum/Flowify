@@ -7,6 +7,10 @@ python2 Flowify.py [mflow username] [mflow password] [mFlow playlist name] [file
 Your uri file should be created by selecting all files in a spotify playlist within the Spotify client, right 
 clicking and selecting copy spotify uris.  These should then be pasted/saved into a text file. 
 
+or you can copy the uris to clipboard and then run the script as follows to read direct from clipboard
+
+Flowify.py [mflow username] [mflow password] [mFlow playlist name]
+
 As the mFlow website only shows 50 flows in a playlist, the script automatically splits larger playlists into 
 separate playlists named [name of playlist] part 2, part 3, etc. There is also a hard limit of 100 songs per 
 playlist beyond which they are deemed "full", so any workround will have to be at the client end. 
@@ -19,3 +23,4 @@ PLEASE NOTE
 Only songs which have been flowed can be added to a user playlist.  The script will flow the song using your 
 account if it can't already find a flow of that song.  So please don't use the script if you have an issue with 
 that. 
+

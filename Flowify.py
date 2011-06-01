@@ -4,14 +4,17 @@ def spotifylookup(uri):
 	result=simplejson.load(urllib.urlopen(URL))
 	name=result["track"]["name"]
 	artistnames=[]
+	album=result["track"]["album"]["name"]
 	for artist in result["track"]["artists"]:
 		artistnames.append(artist["name"])
+	
 		
 	isrc=""
 	for id in result["track"]["external-ids"]:
 		if isrc=="" and id["type"]=="isrc":
 			isrc=id["id"]
-	result={"title":name, "artists":artistnames, "isrc": isrc}
+	result={"title":name, "artists":artistnames, "isrc": isrc, 
+"album": album}
 	return result	
 
 def isrctest(trackurn,isrc):
@@ -53,20 +56,37 @@ def mflowtracklookup(result,sessionid,userid):
 		  except:
 			newresult={"Tracks", []}
 	items=[]
+	matches=[]
 	for track in newresult["Tracks"]:
+	       
                if flowurn=="":
                        if track["ArtistName"] in result["artists"]:
 			if track["Title"].lower()==result["title"].lower(): 
-                                trackurn=track["TrackUrn"]
-				flowurn=searchurn(trackurn)
+			  if track["AlbumName"].lower()==result["album"].lower(): 
+                                
+				trackurn=track["TrackUrn"]
+			  	flowurn=searchurn(trackurn)
 				if flowurn=="":
 					flowurn=flowit(trackurn,sessionid,userid)
 				if flowurn!="":
 					artist=track["ArtistName"]
 					title=track["Title"]
+			  else:
+				matches.append(track)
 			else:
 				items.append(track)
+
         if flowurn=="":
+	  if matches!=[]:
+		track=matches[0]
+		trackurn=track["TrackUrn"]
+	  	flowurn=searchurn(trackurn)
+		if flowurn=="":
+			flowurn=flowit(trackurn,sessionid,userid)
+		if flowurn!="":
+			artist=track["ArtistName"]
+			title=track["Title"]
+	  if flowurn=="":
 		tracklist=[]
 		for item in items:
 				tracklist.append(item["Title"])
@@ -171,17 +191,25 @@ import urllib
 import string
 import sys
 import difflib
-if len(sys.argv) != 5:
- sys.exit("this script requires four arguments: mflow username, password, name of new playlist and file containing spotify uris")
+if len(sys.argv) != 5 and len(sys.argv)!= 4:
+ sys.exit("this script requires three or four arguments: mflow username, password and name of new playlist. A fourth argument can be provided giving the file containing spotify uris. If no fourth argument is provided, the contents of the clipboard will be used.")
 login=mflowlogin(sys.argv[1],sys.argv[2])
 userid=login[0]
 sessionid=login[1]
 playlist=mflowplaylist(userid,sessionid,sys.argv[3])
-try:
- f = open(sys.argv[4], 'r')
-except: 
- sys.exit("failed to open file!")
-uris=string.split(f.read())
+if len(sys.argv)==5:
+ try:
+  f = open(sys.argv[4], 'r')
+ except: 
+  sys.exit("failed to open file!")
+ uris=string.split(f.read())
+else:
+ try:
+  import pyperclip
+  uris=string.split(pyperclip.getcb())
+ except:
+  sys.exit("failed to open file!")
+
 counter=0
 part=2
 for uri in uris:
@@ -194,4 +222,7 @@ for uri in uris:
 		part=part+1
  	if playlistadd(userid,sessionid,flow,playlist, result):
  		counter=counter+1
-f.close
+try:
+	f.close
+except: 
+	pass
