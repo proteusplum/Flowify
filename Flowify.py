@@ -54,12 +54,22 @@ def mflowtracklookup(result,sessionid,userid):
 			URL=u"http://ws.mflow.com/DigitalDistribution.SearchIndex.Host.WebService/Public/Json/SyncReply/SearchTracks?Query="+urllib.quote(query.encode('utf-8','ignore'))+"&Take=500"
         		newresult=simplejson.load(urllib.urlopen(URL))
 		  except:
-			newresult={"Tracks", []}
+			newresult={"Tracks": []}
 	items=[]
 	matches=[]
 	for track in newresult["Tracks"]:
 	       
                if flowurn=="":
+                       result["title"] = string.replace(result["title"]," (Album Version)","")
+                       result["title"] = string.replace(result["title"]," (Single Version)","")
+                       result["title"] = string.replace(result["title"]," [Album Version]","")
+                       result["title"] = string.replace(result["title"]," [Single Version]","")
+
+                       track["Title"] = string.replace(track["Title"]," (Album Version)","")
+                       track["Title"] = string.replace(track["Title"]," (Single Version)","")
+                       track["Title"] = string.replace(track["Title"]," [Album Version]","")
+                       track["Title"] = string.replace(track["Title"]," [Single Version]","")
+	
                        if track["ArtistName"] in result["artists"]:
 			if track["Title"].lower()==result["title"].lower(): 
 			  if track["AlbumName"].lower()==result["album"].lower(): 
@@ -174,7 +184,7 @@ def mflowlogin(username, password):
 def mflowplaylist(userid, sessionid, name):
 	URL=u"http://ws.mflow.com/DigitalDistribution.UserCatalogue.Host.WebService/Public/Json/SyncReply/CreateUserPlaylist?Name="+urllib.quote(name)+"&UserId="+userid+"&SessionId="+sessionid
 	result=simplejson.load(urllib.urlopen(URL))
-	if result["Playlist"]["Id"]!="00000000-0000-0000-0000-000000000000":
+	if result["Playlist"] and result["Playlist"]["Id"]!="00000000-0000-0000-0000-000000000000":
 	 print "successfully created new playlist " +name
 	 return result["Playlist"]["Id"]
 	else:
